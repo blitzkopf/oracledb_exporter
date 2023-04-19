@@ -20,7 +20,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/log/level"
-	_ "github.com/mattn/go-oci8"
+	_ "github.com/sijms/go-ora/v2"
 
 	"fmt"
 
@@ -108,7 +108,7 @@ func maskDsn(dsn string) string {
 
 func connect(dsn string, logger log.Logger) *sql.DB {
 	level.Debug(logger).Log("msg", "Launching connection", "dsn", maskDsn(dsn))
-	db, err := sql.Open("oci8", dsn)
+	db, err := sql.Open("oracle", dsn)
 	if err != nil {
 		level.Error(logger).Log("msg", "Error while connecting to", "dsn", dsn)
 		panic(err)

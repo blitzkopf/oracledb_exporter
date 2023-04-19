@@ -48,11 +48,8 @@ prereq: download-rpms
 	echo $(LD_LIBRARY_PATH) | sudo tee /etc/ld.so.conf.d/oracle.conf
 	sudo ldconfig
 
-oci.pc:
-	sed "s/@ORACLE_VERSION@/$(ORACLE_VERSION)/g" oci8.pc.template | \
-	sed "s/@MAJOR_VERSION@/$(MAJOR_VERSION)/g" > oci8.pc
 
-go-build: oci.pc
+go-build: 
 	@echo "Build $(OS_TYPE)"
 	mkdir -p ./dist/$(DIST_DIR)
 	PKG_CONFIG_PATH=${PWD} GOOS=$(OS_TYPE) GOARCH=$(ARCH_TYPE) go build $(GOFLAGS) -o ./dist/$(DIST_DIR)/oracledb_exporter
@@ -77,7 +74,7 @@ go-test:
 	@PKG_CONFIG_PATH=${PWD} GOOS=$(OS_TYPE) GOARCH=$(ARCH_TYPE) go test -coverprofile="test-coverage.out" $$(go list ./... | grep -v /vendor/)
 
 clean:
-	rm -rf ./dist sgerrand.rsa.pub glibc-*.apk oracle-*.rpm oci8.pc
+	rm -rf ./dist sgerrand.rsa.pub glibc-*.apk oracle-*.rpm 
 
 docker: ubuntu-image alpine-image oraclelinux-image
 
@@ -159,7 +156,7 @@ else
 	@echo "Can't find cosign.key file"
 endif
 
-travis: oci.pc prereq deps go-test go-build docker
+travis: prereq deps go-test go-build docker
 	@true
 
-.PHONY: version build deps go-test clean docker travis glibc.apk oci.pc
+.PHONY: version build deps go-test clean docker travis glibc.apk 
